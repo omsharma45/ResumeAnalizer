@@ -1,0 +1,35 @@
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+llm = ChatOpenAI(temperature=0.7)
+
+def analyze_resume(resume_text, jd_text):
+    prompt = PromptTemplate(
+        input_variables=["resume", "jd"],
+        template="""
+        You are an AI resume analyzer.
+
+        Compare the resume with job description.
+
+        Give output in this format:
+        1. Match Score (%)
+        2. Missing Skills
+        3. Suggestions
+
+        Resume:
+        {resume}
+
+        Job Description:
+        {jd}
+        """
+    )
+
+    response = llm.predict(
+        prompt.format(resume=resume_text, jd=jd_text)
+    )
+
+    return response
